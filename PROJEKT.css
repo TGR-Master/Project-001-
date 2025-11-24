@@ -1,0 +1,48 @@
+*{box-sizing:border-box}
+:root{
+  --btn-bg: #2563eb;
+  --btn-color: #fff;
+  --danger-bg: #ef4444;
+}
+body{
+  margin:0;
+  font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  transition: background-color 300ms ease, color 300ms ease;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+main{
+  text-align:center;
+  padding:1.5rem;
+}
+button{
+  background:var(--btn-bg);
+  color:var(--btn-color);
+  border:0;
+  padding:.6rem 1rem;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:1rem;
+}
+button.danger{
+  background:var(--danger-bg);
+}
+.row{ display:inline-flex; align-items:center; gap:.6rem; }
+.count{ margin-left:.5rem; font-weight:700; font-size:1.1rem; }
+
+
+.particle{
+  position:fixed;
+  pointer-events:none;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  will-change: transform, opacity;
+  transition: transform 700ms cubic-bezier(.2,.8,.2,1), opacity 700ms ease-out;
+  opacity:1;
+  mix-blend-mode:screen;
+}
+
+.hint{ color:#6b7280; margin-top:.6rem; font-size:.95rem; }
