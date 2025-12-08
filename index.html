@@ -1,35 +1,452 @@
+<!doctype html>
 <html lang="hr">
 <head>
-  <meta name="google-site-verification" content="HmzRWq-D_emmLDV3MZVEBZtZjCMMMfYjAwQtjdt5zzc" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jednostavno mijenjanje pozadine, brojač i eksplozija</title>
-  <link rel="stylesheet" href="PROJEKT.css" />
+  <title>Školski projekt — 8 malih funkcija</title>
+  <style>
+:root{
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #3b82f6;
+  --accent-2: #ef4444;
+  --glass: rgba(59,130,246,0.06);
+  --shadow: 0 6px 18px rgba(16,24,40,0.06);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background: linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+  color: #111827;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+}
+.container{
+  max-width:980px;
+  margin:28px auto;
+  padding:0 18px;
+}
+.site-header{
+  margin-bottom:12px;
+}
+.site-header h1{
+  margin:6px 0 2px;
+  font-size:1.6rem;
+  letter-spacing:-0.2px;
+}
+.lede{
+  margin:0;
+  color:var(--muted);
+  font-size:0.95rem;
+}
+.card{
+  background: var(--card);
+  border-radius:12px;
+  padding:14px;
+  margin:14px 0;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(15,23,42,0.04);
+}
+.card h2{margin:0 0 6px;font-size:1.05rem}
+.muted{color:var(--muted);margin:0 0 8px;font-size:0.92rem}
+.small{font-size:0.85rem;color:var(--muted)}
+.row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+input[type="text"], input[type="number"], input[type="password"], textarea{
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid rgba(15,23,42,0.08);
+  background: #fff;
+  min-width:160px;
+  flex: 1 1 220px;
+  font-size:0.95rem;
+}
+textarea{resize:vertical}
+.btn{
+  background:var(--accent);
+  color:white;
+  padding:9px 12px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow: 0 6px 12px rgba(59,130,246,0.12);
+}
+.btn.ghost{
+  background:transparent;
+  color:var(--accent);
+  border:1px solid rgba(59,130,246,0.12);
+  box-shadow:none;
+}
+.btn:active{transform:translateY(1px)}
+.output{
+  background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px dashed rgba(15,23,42,0.04);
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  color:#111827;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+.pass-meter{
+  width:100%;
+  height:10px;
+  border-radius:6px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,0.04);
+}
+.pass-meter span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg, #34d399, #3b82f6);
+  width:0%;
+  transition:width .25s ease;
+}
+.timer-display{
+  min-width:160px;
+  text-align:center;
+  font-weight:700;
+  padding:10px;
+  border-radius:8px;
+  background:#111827;
+  color:white;
+  font-family: monospace;
+  font-size:1rem;
+}
+.stats-row{width:100%; display:flex; gap:12px; flex-wrap:wrap}
+.stats-item{flex:1 1 140px; padding:6px 8px; border-radius:6px; background:rgba(0,0,0,0.02); font-weight:600}
+.quote-text{font-style:italic; margin-bottom:6px; width:100%}
+.site-footer{
+  margin:22px 0 60px;
+  color:var(--muted);
+  text-align:center;
+}
+@media (max-width:720px){
+  .row{flex-direction:column; align-items:stretch;}
+  .timer-controls{display:flex; gap:8px;}
+  .stats-row{flex-direction:column;}
+}
+  </style>
 </head>
 <body>
-  <main>
-    <h1>Promjeni boju pozadine, brojač i eksplozija</h1>
-
-
-    <button id="colorBtn">Promijeni pozadinu</button>
-
-
-    <div class="row" style="margin-top:12px;">
-      <button id="countBtn">Klikni me</button>
-      <span id="countDisplay" class="count">0</span>
+  <header class="site-header">
+    <div class="container">
+      <h1>8 malih funkcija — školski projekt</h1>
+      <p class="lede">Zamijenio sam broj 4 i dodao 3 nove funkcije — spremno za Phoenix Code.</p>
     </div>
+  </header>
 
- 
-    <div style="margin-top:12px;">
-      <button id="explodeBtn" class="danger">Eksplodiraj!</button>
-    </div>
+  <main class="container">
+    <section class="card" id="card-add">
+      <h2>1. Zbroj dva broja</h2>
+      <p class="muted">Jednostavno zbrajanje; podržava decimalne vrijednosti.</p>
+      <div class="row">
+        <input type="number" id="add-a" placeholder="Broj A (npr. 3.5)" value="3">
+        <input type="number" id="add-b" placeholder="Broj B (npr. 2.2)" value="5">
+        <button id="btn-add" class="btn">Zbroji</button>
+      </div>
+      <div class="output" id="out-add">—</div>
+    </section>
 
+    <section class="card" id="card-mul">
+      <h2>2. Produkt niza brojeva</h2>
+      <p class="muted">Unesi brojeve razdvojene zarezom ili razmakom (tolerantni parser).</p>
+      <div class="row">
+        <input type="text" id="mul-input" placeholder="npr. 2, 3, 4" value="2,3,4">
+        <button id="btn-mul" class="btn">Izračunaj</button>
+      </div>
+      <div class="output" id="out-mul">—</div>
+    </section>
 
+    <section class="card" id="card-rev">
+      <h2>3. Obrni tekst</h2>
+      <p class="muted">Obrnuti redoslijed znakova — zabavno za demonstraciju.</p>
+      <div class="row">
+        <input type="text" id="rev-text" placeholder="Napiši nešto..." value="Pozdrav svima">
+        <button id="btn-rev" class="btn">Obrni</button>
+      </div>
+      <div class="output" id="out-rev">—</div>
+    </section>
+
+    <section class="card" id="card-pass">
+      <h2>4. Provjeri snagu lozinke</h2>
+      <p class="muted">Procjena na osnovu duljine i različitih tipova znakova.</p>
+      <div class="row">
+        <input type="password" id="pass-input" placeholder="Upiši lozinku..." value="Pssw0rd!">
+        <button id="btn-pass" class="btn">Provjeri</button>
+      </div>
+      <div class="output" id="out-pass">
+        <div class="pass-meter" id="pass-meter"><span id="pass-meter-fill" style="width:0%"></span></div>
+        <div id="out-pass-text" style="margin-top:8px">—</div>
+      </div>
+    </section>
+
+    <section class="card" id="card-timer">
+      <h2>5. Štoparica</h2>
+      <p class="muted">Start / Stop / Reset + jednostavan prikaz.</p>
+      <div class="row">
+        <div id="timer-display" class="timer-display">00:00.000</div>
+        <div class="timer-controls">
+          <button id="btn-timer-start" class="btn">Start</button>
+          <button id="btn-timer-stop" class="btn ghost">Stop</button>
+          <button id="btn-timer-reset" class="btn ghost">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="card-bmi">
+      <h2>6. BMI kalkulator</h2>
+      <p class="muted">Unesi težinu (kg) i visinu (cm). Prikaz kategorije.</p>
+      <div class="row">
+        <input type="number" id="bmi-weight" placeholder="Težina (kg)" min="1" value="70">
+        <input type="number" id="bmi-height" placeholder="Visina (cm)" min="50" value="175">
+        <button id="btn-bmi" class="btn">Izračunaj</button>
+      </div>
+      <div class="output" id="out-bmi">—</div>
+    </section>
+
+    <section class="card" id="card-textstats">
+      <h2>7. Statistika teksta</h2>
+      <p class="muted">Broj riječi, znakova i procjena vremena čitanja.</p>
+      <div class="row" style="flex-direction:column;">
+        <textarea id="text-input" rows="4" placeholder="Zalijepi neki tekst ovdje...">Ovo je primjer teksta za statistiku.</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button id="btn-stats" class="btn">Analiziraj</button>
+          <button id="btn-clear-text" class="btn ghost">Očisti</button>
+        </div>
+      </div>
+      <div class="output" id="out-stats">—</div>
+    </section>
+
+    <section class="card" id="card-quotes">
+      <h2>8. Nasumični motivacijski citat</h2>
+      <p class="muted">Jednostavan lokalni generator citata — ne zahtijeva internet.</p>
+      <div class="row">
+        <button id="btn-quote" class="btn">Novi citat</button>
+        <button id="btn-copy-quote" class="btn ghost">Kopiraj</button>
+      </div>
+      <div class="output" id="out-quote">Pritisni "Novi citat" za prikaz.</div>
+    </section>
+
+    <footer class="site-footer">
+      <p class="muted small">Napomena: broj 4 (email validacija) zamijenjen je provjerom lozinke. Dodano: BMI, tekst statistika i citati.</p>
+    </footer>
   </main>
 
-  <script src="PROJEKT.js"></script>
-</body>
+  <script>
+(function () {
+  function by(id){ return document.getElementById(id); }
+  function text(node, v){ node.textContent = String(v); }
 
+  function addNumbers(a, b){
+    const na = Number(a), nb = Number(b);
+    return Number.isFinite(na) && Number.isFinite(nb) ? na + nb : NaN;
+  }
+  by('btn-add').addEventListener('click', function(){
+    const a = by('add-a').value, b = by('add-b').value;
+    const rez = addNumbers(a,b);
+    text(by('out-add'), Number.isNaN(rez) ? 'Nevažeći unos' : rez);
+  });
+
+  function multiplyList(str){
+    if (!str || !str.trim()) return 0;
+    const parts = str.split(/[, ]+/).map(s => s.trim()).filter(Boolean);
+    const nums = parts.map(p => Number(p)).filter(n => Number.isFinite(n));
+    if (nums.length === 0) return 0;
+    return nums.reduce((acc, x) => acc * x, 1);
+  }
+  by('btn-mul').addEventListener('click', function(){
+    const out = multiplyList(by('mul-input').value);
+    text(by('out-mul'), out);
+  });
+
+  function reverseString(s){
+    return String(s).split('').reverse().join('');
+  }
+  by('btn-rev').addEventListener('click', function(){
+    text(by('out-rev'), reverseString(by('rev-text').value || ''));
+  });
+
+  function passwordStrength(pw){
+    pw = String(pw || '');
+    let score = 0;
+    if (pw.length >= 8) score += 2;
+    if (pw.length >= 12) score += 1;
+    if (/[a-z]/.test(pw)) score += 1;
+    if (/[A-Z]/.test(pw)) score += 1;
+    if (/[0-9]/.test(pw)) score += 1;
+    if (/[^A-Za-z0-9]/.test(pw)) score += 1;
+    if (pw.length === 0) score = 0;
+    return Math.max(0, Math.min(7, score));
+  }
+  function passLabel(score){
+    if (score === 0) return {text: 'Prazno', color: '#e5e7eb', pct: 0};
+    if (score <= 2) return {text: 'Vrlo slabo', color: '#ef4444', pct: 20};
+    if (score <= 4) return {text: 'Slabo', color: '#f59e0b', pct: 45};
+    if (score <= 5) return {text: 'Srednje', color: '#facc15', pct: 65};
+    if (score <= 6) return {text: 'Jako', color: '#34d399', pct: 85};
+    return {text: 'Vrlo jako', color: '#06b6d4', pct: 100};
+  }
+  by('btn-pass').addEventListener('click', function(){
+    const pw = by('pass-input').value;
+    const s = passwordStrength(pw);
+    const lbl = passLabel(s);
+    const fill = by('pass-meter-fill');
+    fill.style.width = lbl.pct + '%';
+    fill.style.background = lbl.color;
+    text(by('out-pass-text'), lbl.text + (pw ? ` — score ${s}/7` : ''));
+  });
+
+  let timerStart = 0;
+  let timerElapsed = 0;
+  let timerRaf = null;
+  const display = by('timer-display');
+
+  function formatTime(ms){
+    ms = Math.max(0, Math.floor(ms));
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    const msPart = ms % 1000;
+    return String(minutes).padStart(2,'0') + ':' +
+           String(seconds).padStart(2,'0') + '.' +
+           String(msPart).padStart(3,'0');
+  }
+  function tick(){
+    const now = performance.now();
+    const cur = timerElapsed + (now - timerStart);
+    display.textContent = formatTime(cur);
+    timerRaf = requestAnimationFrame(tick);
+  }
+  by('btn-timer-start').addEventListener('click', function(){
+    if (timerRaf) return;
+    timerStart = performance.now();
+    timerRaf = requestAnimationFrame(tick);
+    by('btn-timer-start').textContent = 'Vrti...';
+  });
+  by('btn-timer-stop').addEventListener('click', function(){
+    if (!timerRaf) return;
+    cancelAnimationFrame(timerRaf);
+    const now = performance.now();
+    timerElapsed += (now - timerStart);
+    timerRaf = null;
+    display.textContent = formatTime(timerElapsed);
+    by('btn-timer-start').textContent = 'Nastavi';
+  });
+  by('btn-timer-reset').addEventListener('click', function(){
+    if (timerRaf) cancelAnimationFrame(timerRaf);
+    timerStart = 0; timerElapsed = 0; timerRaf = null;
+    display.textContent = formatTime(0);
+    by('btn-timer-start').textContent = 'Start';
+  });
+
+  function calcBMI(weightKg, heightCm){
+    const w = Number(weightKg);
+    const h = Number(heightCm);
+    if (!Number.isFinite(w) || !Number.isFinite(h) || w <= 0 || h <= 0) return NaN;
+    const hM = h / 100;
+    const bmi = w / (hM * hM);
+    return Math.round(bmi * 10) / 10;
+  }
+  function bmiCategory(bmi){
+    if (Number.isNaN(bmi)) return '';
+    if (bmi < 18.5) return 'Pothranjenost';
+    if (bmi < 25) return 'Normalna težina';
+    if (bmi < 30) return 'Pretilost (Klasa I)';
+    return 'Pretilost (Klasa II+)';
+  }
+  by('btn-bmi').addEventListener('click', function(){
+    const w = by('bmi-weight').value, h = by('bmi-height').value;
+    const v = calcBMI(w,h);
+    if (Number.isNaN(v)){
+      text(by('out-bmi'), 'Unesi ispravne vrijednosti (kg i cm).');
+      return;
+    }
+    text(by('out-bmi'), `BMI = ${v} — ${bmiCategory(v)}`);
+  });
+
+  function textStats(s){
+    s = String(s || '');
+    const chars = s.length;
+    const words = s.trim().length === 0 ? 0 : s.trim().split(/\s+/).length;
+    const sentences = (s.match(/[.!?]+/g) || []).length || (words > 0 ? 1 : 0);
+    const readingMinutes = words / 200;
+    return {chars, words, sentences, readingMinutes};
+  }
+  by('btn-stats').addEventListener('click', function(){
+    const s = by('text-input').value;
+    const st = textStats(s);
+    const out = by('out-stats');
+    out.innerHTML = '';
+    const row = document.createElement('div'); row.className = 'stats-row';
+    const items = [
+      {k: 'Riječi', v: st.words},
+      {k: 'Znakovi', v: st.chars},
+      {k: 'Rečenice', v: st.sentences},
+      {k: 'Vrijeme čitanja', v: `${Math.ceil(st.readingMinutes*60)} sek.`}
+    ];
+    items.forEach(it => {
+      const d = document.createElement('div'); d.className = 'stats-item';
+      d.textContent = `${it.k}: ${it.v}`;
+      row.appendChild(d);
+    });
+    out.appendChild(row);
+  });
+  by('btn-clear-text').addEventListener('click', function(){
+    by('text-input').value = '';
+    text(by('out-stats'), 'Očišćeno.');
+  });
+
+  const quotes = [
+    "Učenje danas, uspjeh sutra.",
+    "Mali koraci vode do velikih rezultata.",
+    "Ne boj se pogriješiti; boj se ne pokušati.",
+    "Rad i upornost pobjeđuju talent kad talent ne radi.",
+    "Znanje ti nitko ne može oduzeti."
+  ];
+  function randomQuote(){
+    return quotes[Math.floor(Math.random()*quotes.length)];
+  }
+  by('btn-quote').addEventListener('click', function(){
+    const q = randomQuote();
+    const out = by('out-quote');
+    out.innerHTML = `<div class="quote-text">“${q}”</div><div class="small muted">Autor: nepoznat (primjer)</div>`;
+  });
+  by('btn-copy-quote').addEventListener('click', function(){
+    const txt = by('out-quote').innerText.trim();
+    if (!txt) return alert('Nema citata za kopirati.');
+    navigator.clipboard?.writeText(txt).then(() => {
+      const old = by('btn-copy-quote').textContent;
+      by('btn-copy-quote').textContent = 'Kopirano!';
+      setTimeout(()=> by('btn-copy-quote').textContent = old, 1000);
+    }).catch(()=> alert('Ne mogu kopirati (preglednik).'));
+  });
+
+  (function init(){
+    text(by('out-add'), 'Pritisni "Zbroji"');
+    text(by('out-mul'), 'Pritisni "Izračunaj"');
+    text(by('out-rev'), 'Pritisni "Obrni"');
+    text(by('out-pass-text'), 'Pritisni "Provjeri"');
+    display.textContent = formatTime(0);
+    text(by('out-bmi'), 'Pritisni "Izračunaj"');
+    text(by('out-stats'), 'Pritisni "Analiziraj"');
+    text(by('out-quote'), 'Pritisni "Novi citat" za prikaz.');
+  }());
+})();
+  </script>
+</body>
 </html>
 
 
